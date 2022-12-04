@@ -26,8 +26,9 @@ def get_day_url(day: int) -> str:
 
 day = get_next_day()
 day_str = f"day{day}"
-response = requests.get(get_day_url(day))
+url = get_day_url(day)
 
+response = requests.get(url)
 
 if(not response):
     print('\033[1m' + "You're all up to date.")
@@ -40,3 +41,5 @@ os.chmod(main_py_dir, os.stat(main_py_dir).st_mode | stat.S_IEXEC)
 soup = BeautifulSoup(response.content.decode('utf-8'), 'html.parser')
 with open(os.path.join(main_dir, day_str, 'README.md'), 'w') as fd:
     fd.write(soup.find('main').get_text())
+
+print('\033[1m' + f"Successfully created day {day}!\n{url}")
