@@ -11,7 +11,7 @@ class File():
         self._size = size
 
     def to_string(self, index: int):
-        return " " * (index * 2) + f"- {self._name} (file, size={self._size})"
+        return " " * (index * 2) + f"- {self._name} (file, size={self._size})\n"
 
     @property
     def size(self):
@@ -47,7 +47,7 @@ class Directory(File):
         ret = " " * (index * 2) + \
             f"- {self._name} (dir)\n"
         for f in self.files:
-            ret += f.to_string(index+1) + '\n'
+            ret += f.to_string(index+1)
         return ret
 
     def get_all_dirs_with_size_compared_to_threshold(self, threshold: int, comparator=lambda x, y: x < y):
