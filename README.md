@@ -8,3 +8,4 @@ Repo for my [Advent of Code 2022](https://adventofcode.com/) solutions.
 - [Day 5: Supply Stacks](./solutions/day5)
 - [Day 6: Tuning Trouble](./solutions/day6)
 - [Day 7: No Space Left On Device](./solutions/day7)
+- [Day 8: Treetop Tree House](./solutions/day8)
