@@ -2,7 +2,7 @@
 
 import math
 from sys import stdin
-from typing import Set, Tuple
+from typing import List, Set, Tuple
 
 
 def abs_ceil(num: int):
@@ -11,11 +11,15 @@ def abs_ceil(num: int):
     return math.ceil(num)
 
 
+start = (0, 0)
+
+
 class Knot():
-    def __init__(self, x: int, y: int):
+    def __init__(self, x: int, y: int, id: int):
         self.x = x
         self.y = y
         self.visited: Set[Tuple[int, int]] = {(x, y)}
+        self.id = 'H' if id == 0 else id
 
     def visit(self):
         self.visited.add((self.x, self.y))
@@ -38,40 +42,47 @@ class Knot():
         self.visit()
 
 
-def print_grid(head, tail):
-    for i in range(-5, 1):
-        for j in range(7):
-            if head.x == i and head.y == j:
-                print('H', end='')
-                continue
-            if tail.x == i and tail.y == j:
-                print('T', end='')
-                continue
-            if (i, j) in tail.visited:
-                print('#', end='')
-                continue
+def print_grid(knots: List[Knot]):
+    max_x, max_y, min_x, min_y = 0, 0, 0, 0
+    for knot in knots:
+        for x, y in knot.visited:
+            min_x = min(min_x, x)
+            min_y = min(min_y, y)
+            max_x = max(max_x, x)
+            max_y = max(max_y, y)
+    for i in range(min_x - 2, max_x+2):
+        for j in range(min_y-2, max_y+2):
+            for knot in knots:
+                if knot.x == i and knot.y == j:
+                    print(knot.id, end='')
+                    break
             else:
+                if (i, j) == start:
+                    print('s', end='')
+                    continue
+                if (i, j) in knots[-1].visited:
+                    print('#', end='')
+                    continue
                 print('.', end='')
         print()
     print()
 
 
-def solve() -> None:
-    # number_of_knots = 2
-    number_of_knots = 10
-    knots = [Knot(0, 0) for _ in range(number_of_knots)]
+def solve(input: List[str], number_of_knots: int) -> int:
+    knots = [Knot(*start, id) for id in range(number_of_knots)]
     head, *_, tail = knots
-    input = stdin.read().strip().splitlines()
     for instruction in input:
         direction, moves = instruction.split(' ')
         for _ in range(int(moves)):
             head.move(direction)
             for prev, next in zip(knots[:-1], knots[1:]):
                 next.follow(prev)
-            # print_grid(head, tail)
+            print_grid(knots)
 
-    print(len(tail.visited))
+    return len(tail.visited)
 
 
 if __name__ == '__main__':
-    solve()
+    input = stdin.read().strip().splitlines()
+    print(solve(input, 2))
+    # print(solve(input, 10))
