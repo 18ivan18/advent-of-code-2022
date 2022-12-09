@@ -77,7 +77,7 @@ def solve(input: List[str], number_of_knots: int) -> int:
             head.move(direction)
             for prev, next in zip(knots[:-1], knots[1:]):
                 next.follow(prev)
-            print_grid(knots)
+            # print_grid(knots)
 
     return len(tail.visited)
 
@@ -85,4 +85,4 @@ def solve(input: List[str], number_of_knots: int) -> int:
 if __name__ == '__main__':
     input = stdin.read().strip().splitlines()
     print(solve(input, 2))
-    # print(solve(input, 10))
+    print(solve(input, 10))
