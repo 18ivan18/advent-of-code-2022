@@ -9,4 +9,5 @@ Repo for my [Advent of Code 2022](https://adventofcode.com/) solutions.
 - [Day 6: Tuning Trouble](./solutions/day6)
 - [Day 7: No Space Left On Device](./solutions/day7)
 - [Day 8: Treetop Tree House](./solutions/day8)
-- [Day 9: Rope Bridge](./solutions/9)
+- [Day 9: Rope Bridge](./solutions/day9)
+- [Day 10: Cathode-Ray Tube](./solutions/day10)
