@@ -11,3 +11,4 @@ Repo for my [Advent of Code 2022](https://adventofcode.com/) solutions.
 - [Day 8: Treetop Tree House](./solutions/day8)
 - [Day 9: Rope Bridge](./solutions/day9)
 - [Day 10: Cathode-Ray Tube](./solutions/day10)
+- [Day 11: Monkey in the Middle](./solutions/day11)
