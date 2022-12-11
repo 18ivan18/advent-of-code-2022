@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 
 from collections import deque
+from copy import deepcopy
 from sys import stdin
 from typing import List
 
-worry = True
+LCD = 2*3*5*7*11*13*17*19
 
 
 class Monkey():
@@ -22,6 +23,7 @@ class Monkey():
             monkey_str_lines[5].split('If false: throw to monkey ')[1])
         self.monkeys: List[Monkey] = []
         self.inspected_items_count = 0
+        self.worry = True
 
     def send_to(self, monkey_id: int, worry_level: int):
         self.monkeys[monkey_id].items.append(worry_level)
@@ -30,9 +32,10 @@ class Monkey():
         self.inspected_items_count += 1
         old = item_value
         worry_level = eval(self.operation)
-        if worry:
+        if self.worry:
             worry_level //= 3
         test = self.test(worry_level)
+        worry_level %= LCD
         self.send_to(
             self.throw_to_if_true if test else self.throw_to_if_false, worry_level)
 
@@ -42,22 +45,25 @@ class Monkey():
             self.items.popleft()
 
 
-def solve() -> None:
-    monkeys = [Monkey(x) for x in stdin.read().split('\n\n')]
+def solve(monkeys: List[Monkey], worry: bool, rounds: int):
+    monkeys = deepcopy(monkeys)
     for monkey in monkeys:
         monkey.monkeys = monkeys
-    rounds = 20
+        monkey.worry = worry
+
     for _ in range(rounds):
         for monkey in monkeys:
             monkey.inspect_items()
 
-    for monkey in sorted(monkeys, key=lambda x: x.inspected_items_count):
+    for monkey in monkeys:
         print(
-            f"Monkey {monkey.id}: {','.join(map(str,monkey.items))} INSPECTED: {monkey.inspected_items_count}")
+            f"Monkey {monkey.id} inspected items {monkey.inspected_items_count} times.")
     a, b = sorted(monkeys, key=lambda x: x.inspected_items_count,
                   reverse=True)[:2]
-    print(a.inspected_items_count*b.inspected_items_count)
+    return a.inspected_items_count*b.inspected_items_count
 
 
 if __name__ == '__main__':
-    solve()
+    monkeys = [Monkey(x) for x in stdin.read().split('\n\n')]
+    print(solve(monkeys, worry=True, rounds=20))
+    print(solve(monkeys, worry=False, rounds=10_000))
