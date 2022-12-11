@@ -5,18 +5,20 @@ from copy import deepcopy
 from sys import stdin
 from typing import List
 
-LCD = 2*3*5*7*11*13*17*19
-
 
 class Monkey():
+    common_div = 1
+
     def __init__(self, monkey_str: str):
         monkey_str_lines = monkey_str.splitlines()
         self.id = int(monkey_str_lines[0][:-1].split('Monkey ')[1])
         self.items = deque([
             int(x) for x in monkey_str_lines[1].split('Starting items: ')[1].split(',')])
         self.operation = monkey_str_lines[2].split('Operation: new = ')[1]
-        self.test = lambda x: x % \
-            (int(monkey_str_lines[3].split('Test: divisible by ')[1])) == 0
+        test_divisor = (
+            int(monkey_str_lines[3].split('Test: divisible by ')[1]))
+        Monkey.common_div *= test_divisor
+        self.test = lambda x: x % test_divisor == 0
         self.throw_to_if_true = int(
             monkey_str_lines[4].split('If true: throw to monkey ')[1])
         self.throw_to_if_false = int(
@@ -35,7 +37,7 @@ class Monkey():
         if self.worry:
             worry_level //= 3
         test = self.test(worry_level)
-        worry_level %= LCD
+        worry_level %= Monkey.common_div
         self.send_to(
             self.throw_to_if_true if test else self.throw_to_if_false, worry_level)
 
