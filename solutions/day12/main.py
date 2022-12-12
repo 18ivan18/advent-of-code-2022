@@ -3,10 +3,6 @@
 from sys import stdin
 
 
-def find_best_signal():
-    pass
-
-
 def solve() -> None:
     input = [list(x) for x in stdin.read().strip().splitlines()]
     max_x, max_y = len(input), len(input[0])
@@ -17,26 +13,24 @@ def solve() -> None:
 
     q = [(0, end)]
     seen = set()
-    p1 = p2 = 0
+    distance_to_start = distance_to_a = 0
     while True:
-        l, p = q.pop(0)
-        if p in seen:
-            continue
-        seen.add(p)
-        x, y = p
+        path_len, coords = q.pop(0)
+        x, y = coords
         if input[x][y] == "a":
-            if not p2:
-                p2 = l
-            elif p == start:
-                p1 = l
+            if not distance_to_a:
+                distance_to_a = path_len
+            if coords == start:
+                distance_to_start = path_len
                 break
 
         for dx, dy in ((0, 1), (0, -1), (1, 0), (-1, 0)):
             nx, ny = x + dx, y + dy
             if 0 <= nx < max_x and 0 <= ny < max_y and (nx, ny) not in seen and (ord(input[x][y]) - ord(input[nx][ny])) <= 1:
-                q.append((l + 1, (nx, ny)))
+                q.append((path_len + 1, (nx, ny)))
+                seen.add((nx, ny))
 
-    print(p1, p2)
+    print(distance_to_start, distance_to_a)
 
 
 if __name__ == '__main__':
