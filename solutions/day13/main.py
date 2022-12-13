@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 from functools import cmp_to_key
-import json
 from sys import stdin
 from typing import List
 
@@ -34,26 +33,22 @@ def compare_arrays_lexicographically(first: List, second: List):
     return len(first) - len(second)
 
 
-def parse(s: str):
-    return json.loads(s)
-
-
 def solve_part_1(input: str):
     input_lines = input.split('\n\n')
     result = 0
     for i, pair in enumerate(input_lines):
         first, second = pair.split('\n')
-        result += (i+1)*(compare_arrays_lexicographically(parse(first),
-                                                          parse(second)) <= 0)
+        result += (i+1)*(compare_arrays_lexicographically(eval(first),
+                                                          eval(second)) <= 0)
     return result
 
 
 def solve_part_2(input: str):
     divider_two, divider_six = [[2]], [[6]]
-    input_lines = list(map(lambda x: parse(
+    input_lines = list(map(lambda x: eval(
         x), input.replace('\n\n', '\n').splitlines())) + [divider_two, divider_six]
     s = sorted(input_lines, key=cmp_to_key(compare_arrays_lexicographically))
-    print((s.index(divider_two)+1) * (s.index(divider_six)+1))
+    return (s.index(divider_two)+1) * (s.index(divider_six)+1)
     # for array in s:
     #     print(array)
 
