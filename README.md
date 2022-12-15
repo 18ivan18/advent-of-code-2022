@@ -15,3 +15,4 @@ Repo for my [Advent of Code 2022](https://adventofcode.com/) solutions.
 - [Day 12: Hill Climbing Algorithm](./solutions/day12)
 - [Day 13: Distress Signal](./solutions/day13)
 - [Day 14: Regolith Reservoir](./solutions/day14)
+- [ Day 15: Beacon Exclusion Zone](./solutions/day15)
