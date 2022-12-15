@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from sys import stdin
-from typing import List, Set, Tuple
+from typing import List, Optional, Set, Tuple
 
 rocks: Set[Tuple[int, int]] = set()
 sand: Set[Tuple[int, int]] = set()
@@ -28,7 +28,7 @@ class Point:
             rocks.add((i, self.y))
 
 
-def print_map(rocks: Set[Tuple[int, int]], min_x: int = 0, max_x: int = 0, min_y: int = 0, max_y: int = 0, falling_rocks: int = 500):
+def print_map(rocks: Set[Tuple[int, int]], min_x: int = 0, max_x: int = 0, min_y: int = 0, max_y: int = 0, falling_rocks: int = 500, floor: Optional[int] = None):
     for i in range(len(str(max(min_x, max_x, falling_rocks)))):
         pprint('  ')
         for j in range(min_y, max_y + 1):
@@ -44,24 +44,35 @@ def print_map(rocks: Set[Tuple[int, int]], min_x: int = 0, max_x: int = 0, min_y
             if i == min_x and j == falling_rocks:
                 pprint('+')
                 continue
+            if floor and i == max_x:
+                pprint('#')
+                continue
             pprint('#' if (j, i) in rocks else 'o' if (j, i) in sand else '.')
         print()
     print()
 
 
-def fall(grain_of_sand: List[int], min_x: int = 0, max_x: int = 0, max_y: int = 0):
+def visited(x, y, max_x: int = 0, floor: Optional[int] = None):
+    if floor and y == max_x:
+        return True
+    return (x, y) in sand or (x, y) in rocks
+
+
+def fall(grain_of_sand: List[int], min_x: int = 0, max_x: int = 0, max_y: int = 0, floor: Optional[int] = None):
     while True:
-        if grain_of_sand[0] >= max_y or not (min_x <= grain_of_sand[1] <= max_x):
-            return False
-        if (grain_of_sand[0], grain_of_sand[1]+1) in sand or (grain_of_sand[0], grain_of_sand[1]+1) in rocks:
-            if (grain_of_sand[0] - 1, grain_of_sand[1]+1) in sand or (grain_of_sand[0]-1, grain_of_sand[1]+1) in rocks:
-                if (grain_of_sand[0]+1, grain_of_sand[1]+1) in sand or (grain_of_sand[0]+1, grain_of_sand[1]+1) in rocks:
+        if visited(grain_of_sand[0], grain_of_sand[1]+1, floor=floor, max_x=max_x):
+            if visited(grain_of_sand[0] - 1, grain_of_sand[1]+1, floor=floor, max_x=max_x):
+                if visited(grain_of_sand[0]+1, grain_of_sand[1]+1, floor=floor, max_x=max_x):
                     break
                 else:
                     grain_of_sand[0] += 1
             else:
                 grain_of_sand[0] -= 1
-        grain_of_sand[1] += 1
+        else:
+            grain_of_sand[1] += 1
+
+    if visited(500, 0):
+        return False
     sand.add((grain_of_sand[0], grain_of_sand[1]))
     return True
 
@@ -77,27 +88,29 @@ def find_edges(rocks: Set[Tuple[int, int]]):
     return min_x, min_y, max_x, max_y
 
 
-def solve():
+def solve(input: List[str], floor: Optional[int] = None):
     falling_rocks = 500
-    input = stdin.read().strip().splitlines()
     for line in input:
         first, *rest = map(Point, line.split(' -> '))
         for p in rest:
             first.rocks_falling(p)
             first = p
     min_x, min_y, max_x, max_y = find_edges(rocks)
-    print_map(rocks, min_x=min_x, max_x=max_x, min_y=min_y,
-              max_y=max_y, falling_rocks=falling_rocks)
+    if floor:
+        max_x += floor
     cnt = 0
     while True:
-        sand = [falling_rocks, min_x]
-        if not fall(sand, min_x=min_x, max_x=max_x, max_y=max_y,):
+        sand_grain = [falling_rocks, min_x]
+        if not fall(sand_grain, min_x=min_x, max_x=max_x, max_y=max_y, floor=floor):
             break
         cnt += 1
-        print_map(rocks, min_x=min_x, max_x=max_x, min_y=min_y,
-                  max_y=max_y, falling_rocks=falling_rocks)
+    min_x, min_y, max_x, max_y = find_edges(rocks | sand)
+    print_map(rocks, min_x=min_x, max_x=max_x, min_y=min_y,
+              max_y=max_y, falling_rocks=falling_rocks, floor=floor)
     print(cnt)
 
 
 if __name__ == '__main__':
-    solve()
+    input = stdin.read().strip().splitlines()
+    # solve(input)
+    solve(input, floor=2)
