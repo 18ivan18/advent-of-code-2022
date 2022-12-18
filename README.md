@@ -17,3 +17,4 @@ Repo for my [Advent of Code 2022](https://adventofcode.com/) solutions.
 - [Day 14: Regolith Reservoir](./solutions/day14)
 - [ Day 15: Beacon Exclusion Zone](./solutions/day15)
 - [Day 16: Proboscidea Volcanium](./solutions/day16)
+- [Day 18: Boiling Boulders](./solutions/day18)
