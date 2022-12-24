@@ -21,3 +21,4 @@ Repo for my [Advent of Code 2022](https://adventofcode.com/) solutions.
 - [Day 20: Grove Positioning System](./solutions/day20)
 - [Day 21: Monkey Math](./solutions/day21)
 - [Day 22: Monkey Map](./solutions/day22)
+- [Day 23: Unstable Diffusion](./solutions/day23)
