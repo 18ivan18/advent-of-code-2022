@@ -12,11 +12,11 @@ def lcm(a, b):
 direction_to_coords = {'<': (0, -1), '>': (0, 1), 'v': (1, 0), '^': (-1, 0)}
 
 
-def bfs(start, end, blizzards, blizzards_repeat_after, pathway, starting_time=1):
+def bfs(start, end, blizzards, blizzards_repeat_after, pathway):
     h, l = len(pathway), len(pathway[0])
-    q = [(start, starting_time)]
+    q = [(start, 1)]
 
-    visited = {(start, starting_time)}
+    visited = {(start, 1)}
     while q:
         pos, time = q.pop(0)
         x, y = pos
@@ -61,6 +61,7 @@ def solve():
 
     third_trip = bfs(start, goal,
                      blizzards, blizzards_repeat_after, pathway)
+
     return first_trip, sum([first_trip, second_trip, third_trip])
 
 
