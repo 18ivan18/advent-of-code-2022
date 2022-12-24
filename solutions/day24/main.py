@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from collections import deque
 import math
 from typing import Dict, List, Set
 
@@ -24,7 +25,7 @@ def bfs(start, end, blizzards, blizzards_repeat_after, pathway, starting_time=1)
             nx, ny = x+dx, y+dy
             if (nx, ny) == end:
                 return time
-            if 0 < nx < h-1 and 0 < ny < l-1 and (nx, ny, '>') not in b and (nx, ny, '<') not in b and (nx, ny, 'v') not in b and (nx, ny, '^') not in b or (nx, ny) == (0, 1):
+            if 0 < nx < h-1 and 0 < ny < l-1 and (nx, ny, '>') not in b and (nx, ny, '<') not in b and (nx, ny, 'v') not in b and (nx, ny, '^') not in b or (nx, ny) == start:
                 if ((nx, ny), time+1) not in visited:
                     q.append(((nx, ny), time+1))
                     visited.add(((nx, ny), time+1))
@@ -37,7 +38,7 @@ def solve():
     start, goal = (0, pathway[0].index(
         '.')), (h-1, pathway[-1].index('.'))
     blizzards_repeat_after = lcm(size_x, size_y)
-    blizzards: List[Set] = []
+    blizzards = deque()
     d = {(i, j, pathway[i][j]) for i in range(1, h)
          for j in range(1, l) if pathway[i][j] in '<>v^'}
     blizzards.append(d)
@@ -53,11 +54,13 @@ def solve():
 
     first_trip = bfs(start, goal,
                      blizzards, blizzards_repeat_after, pathway)
+    blizzards.rotate(-first_trip)
     second_trip = bfs(goal, start,
-                      blizzards, blizzards_repeat_after, pathway, starting_time=first_trip)
+                      blizzards, blizzards_repeat_after, pathway)
+    blizzards.rotate(-second_trip)
 
     third_trip = bfs(start, goal,
-                     blizzards, blizzards_repeat_after, pathway, starting_time=first_trip+second_trip)
+                     blizzards, blizzards_repeat_after, pathway)
     return first_trip, sum([first_trip, second_trip, third_trip])
 
 
