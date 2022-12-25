@@ -23,3 +23,4 @@ Repo for my [Advent of Code 2022](https://adventofcode.com/) solutions.
 - [Day 22: Monkey Map](./solutions/day22)
 - [Day 23: Unstable Diffusion](./solutions/day23)
 - [Day 24: Blizzard Basin](./solutions/day24)
+- [Day 25: Full of Hot Ai](./solutions/day25)
